@@ -20,26 +20,51 @@ import { Input } from "@/components/ui/input";
 import CustomInput from "./CustomInput";
 import { AuthFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const AuthForm = ({ type }: { type: string }) => {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [isLoading, setisLoading] = useState(false);
-  const form = useForm<z.infer<typeof AuthFormSchema>>({
-    resolver: zodResolver(AuthFormSchema),
+  const formSchema = AuthFormSchema(type);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
       password: "",
+      ...(type === "SignUp" && {
+        firstName: "",
+        lastName: "",
+        address1: "",
+        state: "",
+        postalCode: "",
+        dateOfBirth: "",
+        ssn: "",
+      }),
     },
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof AuthFormSchema>) {
-    setisLoading(true);
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-    setisLoading(false);
-  }
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      if (type === "SignUp") {
+        // const newUser = await signUp(data);
+      }
+      if (type === "signin") {
+        // const response = await signIn({
+        //   email: data.email,
+        //   password: data.password,
+        // });
+        // if (response) {
+        //   router.push("/");
+        // }
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setisLoading(false);
+    }
+  };
   return (
     <section className="auth-form">
       <header className="flex flex-col gap-5 md:gap-8 ">
@@ -66,6 +91,65 @@ const AuthForm = ({ type }: { type: string }) => {
         <>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              {type === "SignUp" && (
+                <>
+                  <div className="flex  gap-4">
+                    <CustomInput
+                      control={form.control}
+                      name="firstName"
+                      label="First Name"
+                      placeholder="Enter your first name"
+                    />
+                    <CustomInput
+                      control={form.control}
+                      name="lastName"
+                      label="Last Name"
+                      placeholder="Enter your last name"
+                    />
+                  </div>
+                  <CustomInput
+                    control={form.control}
+                    name="address1"
+                    label="Address"
+                    placeholder="Enter your specific address"
+                  />
+                  <CustomInput
+                    control={form.control}
+                    name="city"
+                    label="City"
+                    placeholder="Enter your city"
+                  />
+                  <div className="flex  gap-4">
+                    <CustomInput
+                      control={form.control}
+                      name="state"
+                      label="State"
+                      placeholder="Example: FL"
+                    />
+                    <CustomInput
+                      control={form.control}
+                      name="postalCode"
+                      label="Postal Code"
+                      placeholder="Example: 33138"
+                    />
+                  </div>
+                  <div className="flex  gap-4">
+                    <CustomInput
+                      control={form.control}
+                      name="dateOfBirth"
+                      label="Date of Birth"
+                      placeholder="YYYY-MM-DD"
+                    />
+                    <CustomInput
+                      control={form.control}
+                      name="ssn"
+                      label="SSN"
+                      placeholder="Example: 1234"
+                    />
+                  </div>
+                </>
+              )}
+
               <CustomInput
                 control={form.control}
                 name="email"
