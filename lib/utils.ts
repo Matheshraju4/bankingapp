@@ -195,7 +195,7 @@ export const getTransactionStatus = (date: Date) => {
   return date > twoDaysAgo ? "Processing" : "Success";
 };
 // Utility function for the AuthFormSchema
-export const AuthFormSchema = (type: string) =>
+export const authFormSchema = (type: string) =>
   z.object({
     firstName:
       type === "SignUp"
