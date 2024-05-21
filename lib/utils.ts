@@ -197,38 +197,18 @@ export const getTransactionStatus = (date: Date) => {
 // Utility function for the AuthFormSchema
 export const authFormSchema = (type: string) =>
   z.object({
-    firstName:
-      type === "SignUp"
-        ? z.string().min(3, "First Name is required")
-        : z.string().optional(),
-    lastName:
-      type === "SignUp"
-        ? z.string().min(3, "Last Name is required")
-        : z.string().optional(),
-    address1:
-      type === "SignUp"
-        ? z.string().max(50, "Address is too long")
-        : z.string().optional(),
-    city: type === "SignUp" ? z.string().max(50) : z.string().optional(),
+    // sign up
+    firstName: type === "sign-in" ? z.string().optional() : z.string().min(3),
+    lastName: type === "sign-in" ? z.string().optional() : z.string().min(3),
+    address1: type === "sign-in" ? z.string().optional() : z.string().max(50),
+    city: type === "sign-in" ? z.string().optional() : z.string().max(50),
     state:
-      type === "SignUp"
-        ? z.string().min(2).max(2, "State should be 2 characters")
-        : z.string().optional(),
+      type === "sign-in" ? z.string().optional() : z.string().min(2).max(2),
     postalCode:
-      type === "SignUp"
-        ? z
-            .string()
-            .min(3)
-            .max(6, "Postal Code should be between 3 and 6 characters")
-        : z.string().optional(),
-    dateOfBirth:
-      type === "SignUp"
-        ? z.string().min(3, "Date of Birth is required")
-        : z.string().optional(),
-    ssn:
-      type === "SignUp"
-        ? z.string().min(4, "SSN should be at least 4 characters")
-        : z.string().optional(),
-    email: z.string().email("Please enter a valid email"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+      type === "sign-in" ? z.string().optional() : z.string().min(3).max(6),
+    dateOfBirth: type === "sign-in" ? z.string().optional() : z.string().min(3),
+    ssn: type === "sign-in" ? z.string().optional() : z.string().min(3),
+    // both
+    email: z.string().email(),
+    password: z.string().min(8),
   });
